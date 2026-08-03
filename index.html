@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI REVOLUTION — Schematic Rev. 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-deep: #0B2E4F;
+    --blue-dark: #071D33;
+    --paper: #E8E2D0;
+    --line: #BFD8EA;
+    --line-dim: rgba(191,216,234,0.28);
+    --amber: #F2A93B;
+    --coral: #E8654C;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --disp: 'Rajdhani', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--blue-deep);
+    background-image:
+      linear-gradient(var(--line-dim) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dim) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--line);
+    font-family: var(--sans);
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; scroll-behavior:auto !important; }
+  }
+
+  /* ---------- corner frame + title block, present on every section ---------- */
+  .sheet{
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .corner-marks::before, .corner-marks::after{
+    content:'';
+    position:absolute;
+    width:14px; height:14px;
+    border-top: 2px solid var(--amber);
+    border-left: 2px solid var(--amber);
+    top: 10px; left: 10px;
+  }
+  .corner-marks::after{
+    top:auto; left:auto; bottom:10px; right:10px;
+    border-top:none; border-left:none;
+    border-bottom:2px solid var(--amber);
+    border-right:2px solid var(--amber);
+  }
+
+  header.title-strip{
+    position: relative;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--line-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--line);
+  }
+  header.title-strip span.tag{ color: var(--amber); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height: 92vh;
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before{ content:'FIG. 01 — '; color: var(--line-dim); }
+
+  h1.headline{
+    font-family: var(--disp);
+    font-weight: 700;
+    font-size: clamp(48px, 9vw, 122px);
+    line-height: 0.94;
+    letter-spacing: 0.01em;
+    margin: 0 0 28px 0;
+    color: var(--paper);
+    text-transform: uppercase;
+  }
+  h1.headline em{
+    font-style: normal;
+    color: var(--amber);
+  }
+
+  .hero-sub{
+    max-width: 560px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(232,226,208,0.78);
+    margin-bottom: 40px;
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items:center;
+  }
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* schematic diagram */
+  .diagram-wrap{
+    border: 1px solid var(--line-dim);
+    border-radius: 2px;
+    padding: 20px;
+    position: relative;
+  }
+  .diagram-wrap .cap{
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(191,216,234,0.55);
+    margin-top: 10px;
+    text-align:center;
+  }
+
+  .node circle{ fill: var(--blue-dark); stroke: var(--line); stroke-width: 1.5; }
+  .node.active circle{ stroke: var(--amber); }
+  .node text{ font-family: var(--mono); font-size: 9px; fill: var(--line); }
+  .edge{ stroke: var(--line-dim); stroke-width: 1; fill:none; }
+  .pulse{ stroke: var(--amber); stroke-width: 2; fill:none; stroke-dasharray: 6 10; animation: dash 3.5s linear infinite; }
+  @keyframes dash{ to{ stroke-dashoffset: -160; } }
+
+  /* CTA buttons */
+  .cta-row{ display:flex; gap: 14px; flex-wrap:wrap; }
+  .btn{
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 13px 22px;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    background: transparent;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    transition: background .2s ease, color .2s ease;
+  }
+  .btn.solid{ background: var(--amber); color: var(--blue-dark); }
+  .btn:hover{ background: var(--amber); color: var(--blue-dark); }
+  .btn:focus-visible, a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--paper);
+    outline-offset: 3px;
+  }
+
+  /* ---------- section headers ---------- */
+  section{ padding: 90px 0; position: relative; border-bottom: 1px solid var(--line-dim); }
+  .sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom: 50px; }
+  .sec-num{ font-family: var(--mono); color: var(--amber); font-size: 13px; }
+  .sec-title{
+    font-family: var(--disp);
+    text-transform: uppercase;
+    font-size: clamp(26px, 4vw, 40px);
+    color: var(--paper);
+    letter-spacing: 0.02em;
+    margin:0;
+  }
+
+  /* ---------- circuit timeline ---------- */
+  .timeline{
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline svg.trace{
+    position:absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 40px;
+  }
+  .trace-line{
+    stroke: var(--line-dim);
+    stroke-width: 2;
+    fill:none;
+  }
+  .trace-line.lit{
+    stroke: var(--amber);
+    transition: stroke-dashoffset 0.4s ease;
+  }
+  .t-item{
+    position:relative;
+    padding: 0 0 64px 28px;
+  }
+  .t-item:last-child{ padding-bottom: 0; }
+  .t-node{
+    position:absolute;
+    left: -46px;
+    top: 2px;
+    width: 14px; height:14px;
+    border-radius:50%;
+    border: 2px solid var(--line-dim);
+    background: var(--blue-deep);
+    transition: border-color .4s ease, box-shadow .4s ease;
+  }
+  .t-item.lit .t-node{
+    border-color: var(--amber);
+    box-shadow: 0 0 12px 2px rgba(242,169,59,0.55);
+  }
+  .t-year{
+    font-family: var(--mono);
+    color: var(--amber);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .t-title{
+    font-family: var(--disp);
+    color: var(--paper);
+    font-size: 24px;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+  }
+  .t-body{
+    max-width: 620px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(232,226,208,0.75);
+    margin:0;
+  }
+
+  /* ---------- spec sheet stats ---------- */
+  .spec-sheet{
+    border: 1px solid var(--line-dim);
+    font-family: var(--mono);
+  }
+  .spec-row{
+    display:grid;
+    grid-template-columns: 100px 1fr 150px;
+    gap: 16px;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--line-dim);
+    align-items: baseline;
+  }
+  .spec-row:last-child{ border-bottom:none; }
+  .spec-row .idx{ color: rgba(191,216,234,0.45); font-size: 12px; }
+  .spec-row .label{ color: var(--paper); font-size: 15px; letter-spacing: 0.03em; }
+  .spec-row .val{ color: var(--amber); font-size: 22px; text-align:right; font-weight:600; }
+  @media (max-width: 640px){
+    .spec-row{ grid-template-columns: 1fr; text-align:left; }
+    .spec-row .val{ text-align:left; }
+  }
+
+  /* ---------- thesis / quote ---------- */
+  .thesis{
+    text-align:left;
+    max-width: 760px;
+  }
+  .thesis p{
+    font-family: var(--disp);
+    font-size: clamp(24px, 3.4vw, 38px);
+    line-height: 1.35;
+    color: var(--paper);
+    text-transform: uppercase;
+    margin:0;
+  }
+  .thesis p em{ color: var(--amber); font-style: normal; }
+  .thesis .attrib{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: rgba(191,216,234,0.55);
+    margin-top: 22px;
+    text-transform: none;
+  }
+
+  /* ---------- footer stamp ---------- */
+  footer{
+    padding: 40px 0 60px 0;
+  }
+  .stamp{
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(191,216,234,0.5);
+    letter-spacing: 0.06em;
+  }
+
+  /* reveal on scroll */
+  .reveal{
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in{ opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="title-strip corner-marks">
+  <div>AI REVOLUTION <span class="tag">// SCHEMATIC</span></div>
+  <div>DWG NO. 2026-AI-001&nbsp;&nbsp;REV. D</div>
+</header>
+
+<main class="sheet">
+
+  <!-- HERO -->
+  <section class="hero" style="border-bottom:none;">
+    <div class="eyebrow">A machine that learns is being wired into everything</div>
+    <h1 class="headline">The circuit<br>is <em>live.</em></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="hero-sub">Every few decades a technology stops being a tool and becomes infrastructure. Electricity did it. The internet did it. Artificial intelligence is mid-transition — from research curiosity to the wiring underneath how the world works, decides, and builds.</p>
+        <div class="cta-row">
+          <a class="btn solid" href="#timeline">Trace the circuit</a>
+          <a class="btn" href="#specs">View specifications</a>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 320 220" width="100%" role="img" aria-label="Diagram of a small neural network with signal moving through it">
+          <g class="edge">
+            <path d="M40,40 L150,50" />
+            <path d="M40,110 L150,50" />
+            <path d="M40,180 L150,110" />
+            <path d="M40,40 L150,110" />
+            <path d="M40,110 L150,170" />
+            <path d="M40,180 L150,170" />
+            <path d="M150,50 L260,90" />
+            <path d="M150,110 L260,90" />
+            <path d="M150,170 L260,90" />
+          </g>
+          <g class="pulse">
+            <path d="M40,110 L150,50 L260,90" />
+            <path d="M40,180 L150,110 L260,90" />
+          </g>
+          <g class="node"><circle cx="40" cy="40" r="9"/></g>
+          <g class="node active"><circle cx="40" cy="110" r="9"/></g>
+          <g class="node"><circle cx="40" cy="180" r="9"/></g>
+          <g class="node active"><circle cx="150" cy="50" r="9"/></g>
+          <g class="node"><circle cx="150" cy="110" r="9"/></g>
+          <g class="node active"><circle cx="150" cy="170" r="9"/></g>
+          <g class="node active"><circle cx="260" cy="90" r="11"/><text x="260" y="115" text-anchor="middle">OUT</text></g>
+        </svg>
+        <div class="cap">MODEL 01 — SIGNAL PROPAGATION, INPUT TO INFERENCE</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="sec-head"><span class="sec-num">§01</span><h2 class="sec-title">Trace of the revolution</h2></div>
+    <div class="timeline" id="timelineList">
+      <div class="t-item reveal">
+        <div class="t-node"></div>
+        <div class="t-year">1958</div>
+        <h3 class="t-title">The perceptron</h3>
+        <p class="t-body">Frank Rosenblatt builds a machine that adjusts its own weights from example, the first working sketch of a network that learns rather than one that's told what to do.</p>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-node"></div>
+        <div class="t-year">2012</div>
+        <h3 class="t-title">Deep learning breaks through</h3>
+        <p class="t-body">A deep network wins an image recognition contest by a wide margin, proving that stacking enough layers on enough data on enough compute changes what's possible, not just what's efficient.</p>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-node"></div>
+        <div class="t-year">2017</div>
+        <h3 class="t-title">The transformer</h3>
+        <p class="t-body">A new architecture lets a model weigh every word against every other word at once. It becomes the shared circuit board underneath nearly every major model that follows.</p>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-node"></div>
+        <div class="t-year">2022–2023</div>
+        <h3 class="t-title">The public switch flips</h3>
+        <p class="t-body">Conversational models leave the lab and reach hundreds of millions of people directly. For the first time, "using AI" becomes something anyone can do from a browser tab.</p>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-node"></div>
+        <div class="t-year">NOW</div>
+        <h3 class="t-title">From answers to action</h3>
+        <p class="t-body">The frontier shifts from models that talk to systems that act: writing and running code, browsing, operating software, and working alongside people on real, multi-step tasks.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section id="specs">
+    <div class="sec-head"><span class="sec-num">§02</span><h2 class="sec-title">Field specifications</h2></div>
+    <div class="spec-sheet">
+      <div class="spec-row reveal"><span class="idx">A.01</span><span class="label">Core capability</span><span class="val">PATTERN&nbsp;→&nbsp;PREDICTION</span></div>
+      <div class="spec-row reveal"><span class="idx">A.02</span><span class="label">Primary input</span><span class="val">TEXT / IMAGE / AUDIO</span></div>
+      <div class="spec-row reveal"><span class="idx">A.03</span><span class="label">Deployment surface</span><span class="val">EVERYWHERE, GRADUALLY</span></div>
+      <div class="spec-row reveal"><span class="idx">A.04</span><span class="label">Failure mode</span><span class="val">CONFIDENT & WRONG</span></div>
+      <div class="spec-row reveal"><span class="idx">A.05</span><span class="label">Requires</span><span class="val">HUMAN JUDGMENT</span></div>
+    </div>
+  </section>
+
+  <!-- THESIS -->
+  <section style="border-bottom:none;">
+    <div class="sec-head"><span class="sec-num">§03</span><h2 class="sec-title">Reading the schematic</h2></div>
+    <div class="thesis reveal">
+      <p>A revolution isn't the invention. It's the moment the invention stops being <em>optional</em> — and starts becoming the wire everything else runs through.</p>
+      <div class="attrib">// ANNOTATION, MARGIN OF THE DRAWING</div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="sheet">
+  <div class="stamp">
+    <span>DRAWN FOR THE OPEN WEB</span>
+    <span>SCALE: NOT TO SCALE</span>
+    <span id="year"></span>
+  </div>
+</footer>
+
+<script>
+  // footer year
+  document.getElementById('year').textContent = 'YEAR ' + new Date().getFullYear();
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // timeline "lit" state as items enter view
+  const tItems = document.querySelectorAll('.t-item');
+  const io2 = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('lit');
+      }
+    });
+  }, { threshold: 0.4 });
+  tItems.forEach(el => io2.observe(el));
+</script>
+
+</body>
+</html>
